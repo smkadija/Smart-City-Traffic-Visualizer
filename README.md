@@ -2,7 +2,7 @@
 
 
 ## Track
-Track C – Game / Graphics Industry / Freelancing
+Track C - Game / Graphics Industry / Freelancing
 
 ## Project Overview
 
