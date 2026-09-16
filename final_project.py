@@ -35,9 +35,6 @@ INIT_CARS = [
 cars = [dict(c) for c in INIT_CARS]
 
 # Cohen-Sutherland
-# কী করছে: headlight beam কে road bounds-এ clip করছে
-# কেন লাগছে: off-screen geometry discard করতে
-# real world-এ: GPU frustum culling, every game engine
 def _oc(x,y, x0,x1,y0,y1):
     c=0
     if x<x0: c|=1
@@ -61,9 +58,6 @@ def cs_clip(x0,y0,x1,y1, bx0,bx1,by0,by1):
         else:      x1,y1=x,y; c1=_oc(x1,y1,bx0,bx1,by0,by1)
 
 # Bezier
-# কী করছে: cubic Bezier curve points generate করছে
-# কেন লাগছে: car roof smooth curve ও cloud shape আঁকতে
-# real world-এ: font rendering, Adobe Illustrator, automotive CAD
 def bez(p0,p1,p2,p3,n=30):
     pts=[]
     for i in range(n+1):
@@ -90,9 +84,6 @@ def bez_line(p0,p1,p2,p3,col,w=1.5):
 
 # Primitives
 def rect(x1,y1,x2,y2,col):
-    # কী করছে: filled rectangle আঁকছে
-    # কেন লাগছে: সব architecture ও furniture তৈরিতে
-    # real world-এ: সব 2D game engine sprite box
     glColor3f(*col)
     glBegin(GL_QUADS)
     glVertex2f(x1,y1); glVertex2f(x2,y1)
@@ -106,9 +97,6 @@ def quad4(p1,p2,p3,p4,col):
     glEnd()
 
 def circ(cx,cy,r,col,seg=40):
-    # কী করছে: filled circle আঁকছে
-    # কেন লাগছে: wheels, traffic lights, sun, trees
-    # real world-এ: game physics, weather apps
     glColor3f(*col)
     glBegin(GL_TRIANGLE_FAN)
     glVertex2f(cx,cy)
@@ -134,9 +122,6 @@ def text(x,y,s,col=(1,1,1),font=GLUT_BITMAP_HELVETICA_18):
 
 # SCENE
 def draw_sky():
-    # কী করছে: দিন ও রাতের আকাশ আঁকছে
-    # কেন লাগছে: দিন/রাত পরিবেশ তৈরি করতে
-    # real world-এ: skybox in Unity/Unreal Engine
     if night:
         # NIGHT SKY
         # Deep dark blue gradient sky
@@ -144,7 +129,7 @@ def draw_sky():
         rect(0, 600, W, H, (0.04, 0.05, 0.15))
         rect(0, 700, W, H, (0.06, 0.07, 0.20))
 
-        # Stars — use pre-generated list so they are stable
+        # Stars - use pre-generated list so they are stable
         for sx, sy, sr in STAR_LIST:
             # Twinkle effect: slight brightness variation based on position
             brightness = 0.85 + 0.15 * math.sin(sx * 0.1 + sy * 0.07)
@@ -191,9 +176,6 @@ def draw_sky():
 
 
 def draw_ground():
-    # কী করছে: ঘাসের মাঠ আঁকছে দিন/রাত রঙে
-    # কেন লাগছে: urban environment ground plane
-    # real world-এ: terrain rendering in SimCity
     if night:
         gc = (0.06, 0.16, 0.06)
         gs = (0.04, 0.12, 0.04)
@@ -218,9 +200,6 @@ def draw_ground():
 
 
 def draw_buildings():
-    # কী করছে: city buildings আঁকছে floors ও windows সহ
-    # কেন লাগছে: Smart City urban context দেখাতে
-    # real world-এ: city runner games, urban planning software
     bdata = [
         (10,  490, 120, 680, (0.52, 0.28, 0.28)),
         (125, 490, 225, 720, (0.22, 0.42, 0.72)),
@@ -260,9 +239,6 @@ def draw_buildings():
 
 
 def draw_roads():
-    # কী করছে: রাস্তা ও lane markings আঁকছে
-    # কেন লাগছে: vehicle movement path define করতে
-    # real world-এ: Google Maps road renderer
     rc = (0.14, 0.14, 0.14) if night else (0.18, 0.18, 0.18)
     rl = (0.18, 0.18, 0.18) if night else (0.22, 0.22, 0.22)
 
@@ -313,9 +289,6 @@ def draw_zebra():
 
 
 def draw_tree(x, y, scale=1.0):
-    # কী করছে: detailed tree আঁকছে multi-layer foliage সহ
-    # কেন লাগছে: urban greenery দেখাতে
-    # real world-এ: city simulation (SimCity), road design software
     s = scale
     if night:
         tc  = (0.10, 0.06, 0.02)
@@ -336,9 +309,6 @@ def draw_tree(x, y, scale=1.0):
 
 
 def draw_streetlight(x, y):
-    # কী করছে: streetlight pole ও night glow আঁকছে
-    # কেন লাগছে: রাতের রাস্তা আলোকিত দেখাতে
-    # real world-এ: smart city IoT street lighting
     pc = (0.20, 0.20, 0.24)
     rect(x-3, y,    x+3,  y+72, pc)
     rect(x-3, y+72, x+26, y+76, pc)
@@ -370,9 +340,6 @@ def draw_streetlight(x, y):
 
 
 def draw_signal_pole(px, py, r_on, g_on):
-    # কী করছে: traffic signal pole ও 3-light box আঁকছে
-    # কেন লাগছে: intersection traffic control visualise করতে
-    # real world-এ: Smart City IoT, autonomous vehicle systems
     rect(px, py, px+10, py+110, (0.20, 0.20, 0.22))
     rect(px-10, py+70, px+28, py+112, (0.08, 0.08, 0.10))
     rect(px- 8, py+72, px+26, py+110, (0.12, 0.12, 0.14))
@@ -413,9 +380,6 @@ def draw_signals():
 
 # CARS
 def draw_wheel(wx, wy, spin):
-    # কী করছে: glRotatef দিয়ে wheel spinning animate করছে
-    # কেন লাগছে: realistic movement illusion
-    # real world-এ: all 2D/3D vehicle games
     glPushMatrix()
     glTranslatef(wx, wy, 0)
     glRotatef(spin, 0, 0, 1)
@@ -432,11 +396,6 @@ def draw_wheel(wx, wy, spin):
 
 
 def draw_h_car(x, y, col):
-    """
-    কী করছে: horizontal car আঁকছে Bezier roof, windows, headlight beam সহ
-    কেন লাগছে: horizontal lane vehicle
-    real world-এ: 2D top-down traffic simulation
-    """
     r, g, b = col
     # Shadow
     glColor3f(0, 0, 0)
@@ -495,11 +454,6 @@ def draw_h_car(x, y, col):
 
 
 def draw_v_car(x, y, col):
-    """
-    কী করছে: vertical car আঁকছে Bezier roof, windows, headlights সহ
-    কেন লাগছে: vertical lane vehicle
-    real world-এ: top-down traffic simulation vehicle
-    """
     r, g, b = col
     # Shadow
     glColor3f(0, 0, 0)
@@ -579,11 +533,6 @@ def v_cleared():
 
 # NIGHT AMBIENCE—road glow strip
 def draw_night_road_ambience():
-    """
-    কী করছে: রাতে রাস্তায় আলোর আভা দেখাচ্ছে
-    কেন লাগছে: night immersion বাড়াতে
-    real world-এ: bloom effect in post-processing pipelines
-    """
     if not night:
         return
     glEnable(GL_BLEND)
